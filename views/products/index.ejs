@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .product-card {
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            height: 250px; /* Make images smaller */
+            width: 100%;
+            object-fit: contain;
+        }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-body h3 {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .card-body h5 {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .card-body p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .btnn {
+            background-color: #0077b6;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        .btnn:hover {
+            background-color: #0077b6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .btnn:active {
+            background-color: #0077b6;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btnn:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Responsive layout: 3 items in one row */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px; /* Adds spacing between cards */
+        }
+
+        .col-lg-4, .col-md-6, .col-sm-12 {
+            flex: 1 1 calc(33.3333% - 30px); /* 3 items per row, with gap */
+            max-width: calc(33.3333% - 30px); /* For large screens */
+        }
+
+        /* For smaller screens */
+        @media (max-width: 992px) {
+            .col-md-6 {
+                flex: 1 1 calc(50% - 30px); /* 2 items per row */
+                max-width: calc(50% - 30px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .col-sm-12 {
+                flex: 1 1 100%; /* 1 item per row */
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+    <%- include('../partials/flash') %>
+
+    <div class="container mt-5">
+        <h2>Displaying All The Products</h2>
+        <div class="row justify-content-start">
+            <% for (let item of products) { %>
+                <div class="col-lg-4 col-md-6 col-sm-12 product-card">
+                    <div class="card text-center shadow">
+                        <img src="<%= item.img %>" class="card-img-top" alt="Product Image">
+                        <div class="card-body">
+                            <h3 class="card-title"><%= item.name %></h3>
+                            <h5 class="card-title">Rs: <%= item.price %></h5>
+                            <p class="card-text"><%= item.desc %></p>
+                            <a href="/products/<%= item._id %>" class="btn btnn mt-2">View Product</a>
+                            <% if (currentUser && currentUser.role === "seller") { %>
+                                <a href="/products/<%= item._id %>/edit" class="btn btnn mt-2">Edit Product</a>
+                                <form action="/products/<%= item._id %>?_method=DELETE" method="POST">
+                                    <button type="submit" class="btn btnn mt-2">Delete Product</button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="/js/common.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
